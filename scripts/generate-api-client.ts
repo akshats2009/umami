@@ -256,17 +256,21 @@ ${methods}
 }
 
 async function format(files: string[]) {
-  const biome = path.join(
-    projectRoot,
-    'node_modules',
-    '.bin',
-    process.platform === 'win32' ? 'biome.cmd' : 'biome',
-  );
+  try {
+    const biome = path.join(
+      projectRoot,
+      'node_modules',
+      '.bin',
+      process.platform === 'win32' ? 'biome.cmd' : 'biome',
+    );
 
-  await execFileAsync(biome, ['format', '--write', ...files], {
-    cwd: projectRoot,
-    shell: process.platform === 'win32',
-  });
+    await execFileAsync(biome, ['format', '--write', ...files], {
+      cwd: projectRoot,
+      shell: process.platform === 'win32',
+    });
+  } catch (e) {
+    // Formatting is non-essential during production build
+  }
 }
 
 async function readExisting(file: string) {
